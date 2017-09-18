@@ -13,19 +13,45 @@ const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 // fill this in and move to dir
 const models = {
-  daf: {
+  daf: sequelize.define('daf', {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     
-  }
+    tractate: Sequelize.STRING,
+    tractateShort: Sequelize.STRING,
+    
+    book: Sequelize.STRING,
+    bookShort: Sequelize.STRING,
+    
+    chapter: Sequelize.STRING,
+    chapterShort: Sequelize.STRING,
+
+    section: Sequelize.STRING,
+    sectionShort: Sequelize.STRING,
+    
+    dafNumber: Sequelize.INTEGER,
+
+    raw: Sequelize.TEXT,
+    plain: Sequelize.TEXT,
+    html: Sequelize.TEXT,
+    md: Sequelize.TEXT,
+
+    url: Sequelize.STRING,
+  }),
 };
 
-
+// force: true will drop the table if it already exists
+true || models.daf.sync({force: true}).then(() => {
+  // Table created
+  console.log('syncd');
+});
 // here optionally sync the tables
 
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-
-const dafs = require('./routes/dafs')(models.daf);
 
 var app = express();
 
@@ -36,9 +62,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+
+
+var index = require('./routes/index');
+var users = require('./routes/users');
+
+const dafRoutes = require('./routes/dafs')(models.daf);
+
+const dafAPI = [
+  { method: 'GET', path: '/:id', handler: dafRoutes.readOne },
+  { method: 'POST', path: '/', handler: dafRoutes.create },
+];
+
+const dafRouter = express.Router();
+
+dafAPI.forEach(({ method, path, handler })=>
+  dafRouter[method.toLowerCase()]( path, handler )
+);
+
+
 app.use('/', index);
 app.use('/users', users);
-app.use('/dafs', dafs);
+app.use('/dafs', dafRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

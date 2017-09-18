@@ -1,9 +1,20 @@
-var express = require('express');
-var router = express.Router();
 
-/* GET dafs listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+
+const routes = model => ({
+  readOne: (req, res)=>
+    model.findById( req.params.id )
+         .then(pon => res.json({
+           schema: 'daf',
+           payload: [pon].filter(i=>i),
+         }) ),
+
+  create: (req, res)=>
+    model.create( req.body.payload )
+         .then(pon => res.json({
+           schema: 'daf',
+           prevAction: 'create',
+           payload: [pon],
+         }) ),
 });
 
-module.exports = ()=> router;
+module.exports = routes;
