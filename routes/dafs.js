@@ -1,4 +1,5 @@
-
+const rq = require('request-promise');
+const sanitize = require('./sanitize');
 
 const routes = model => ({
   readOne: (req, res)=>
@@ -15,6 +16,16 @@ const routes = model => ({
            prevAction: 'create',
            payload: [pon],
          }) ),
+
+  readRaw: (req, res)=>
+    rq({
+      method: 'GET',
+      url: `http://dafyomi.co.il/${req.params.tr}/${req.params.ct}/${req.params.file}`,
+    })
+    .then(sanitize)
+    .then(pon=> res.json({ payoad: pon.filter(({length}) => length > 1 ) }) ),
 });
+
+// kesuvos/insites/ks-dt-047.htm',
 
 module.exports = routes;

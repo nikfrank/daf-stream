@@ -71,8 +71,9 @@ var users = require('./routes/users');
 const dafRoutes = require('./routes/dafs')(models.daf);
 
 const dafAPI = [
-  { method: 'GET', path: '/:id', handler: dafRoutes.readOne },
+  { method: 'GET', path: '/id/:id', handler: dafRoutes.readOne },
   { method: 'POST', path: '/', handler: dafRoutes.create },
+  { method: 'GET', path: '/raw/:tr/:ct/:file', handler: dafRoutes.readRaw },
 ];
 
 const dafRouter = express.Router();
@@ -101,7 +102,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({err});
 });
 
 module.exports = app;
