@@ -45,10 +45,10 @@ const models = {
 };
 
 // force: true will drop the table if it already exists
-models.daf.sync({force: true}).then(() => {
+//models.daf.sync({force: true}).then(() => {
   // Table created
-  console.log('syncd');
-});
+//  console.log('syncd');
+//});
 // here optionally sync the tables
 
 
