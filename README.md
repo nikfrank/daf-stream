@@ -37,4 +37,4 @@ GET /daf/:id/plain
 
 ## env vars
 
-expects process.env.POSTGRES_...
+expects process.env.DATABASE_URL
