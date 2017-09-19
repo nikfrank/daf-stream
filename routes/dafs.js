@@ -1,5 +1,6 @@
 const rq = require('request-promise');
 const sanitize = require('./sanitize');
+const markdownify = require('./markdownify');
 
 const routes = model => ({
   readOne: (req, res)=>
@@ -22,10 +23,13 @@ const routes = model => ({
       method: 'GET',
       url: `http://dafyomi.co.il/${req.params.tr}/${req.params.ct}/${req.params.file}`,
     })
-    .then(sanitize)
-    .then(pon=> res.json({ payoad: pon.filter(({length}) => length > 1 ) }) ),
+      .then(sanitize)
+      .then(pon=> pon.filter(tag => ((tag.length||2) > 1) ) )
+      .then(markdownify)
+      .then(pon=> res.send( pon ) )
 });
 
-// kesuvos/insites/ks-dt-047.htm',
 
+//                              || ((tag.tag||'').length === 1) ) )
+// kesuvos/insites/ks-dt-047.htm',
 module.exports = routes;

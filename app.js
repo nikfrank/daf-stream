@@ -46,7 +46,7 @@ const models = {
 
 // force: true will drop the table if it already exists
 //models.daf.sync({force: true}).then(() => {
-  // Table created
+// Table created
 //  console.log('syncd');
 //});
 // here optionally sync the tables
@@ -62,6 +62,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use((req, res, next)=> {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
 
