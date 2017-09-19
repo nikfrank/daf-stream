@@ -24,7 +24,7 @@ const routes = model => ({
       url: `http://dafyomi.co.il/${req.params.tr}/${req.params.ct}/${req.params.file}`,
     })
       .then(sanitize)
-      .then(pon=> pon.filter(tag => ((tag.length||2) > 1) ) )
+      .then(pon=> pon.filter(tag => ((tag.text||'a').match(/\w/) ) ) )
       .then(markdownify)
       .then(pon=> res.send( pon ) )
 });

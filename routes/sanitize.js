@@ -5,15 +5,17 @@ module.exports = (raw)=> (new Promise(resolve => {
 
   const parser = new htmlparser.Parser({
     onopentag: (name, attr)=>{
-      tagsNtext.push({ tag: name, attr });
+      if( name !== 'br' )
+        tagsNtext.push({ tag: name, attr });
     },
     
     ontext: (text)=>{
       if( text.match( /\w/ ) )
-        tagsNtext.push({ text, length: text.length });
+        tagsNtext.push({ text });
     },
     
     onclosetag: (name)=>{
+      if( name === 'br') return;
       if(name === 'html') resolve(tagsNtext);
       else tagsNtext.push({ tag: name, close: true });
     }
